@@ -7,11 +7,9 @@
 
     <title>CraftAttack.xyz - Bald online!</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="antialiased font-sans text-ca-text-light dark:text-ca-text-dark bg-ca-light dark:bg-ca-dark min-h-screen flex flex-col justify-between">
@@ -88,8 +86,11 @@
     <footer class="p-6 text-center text-sm text-ca-text-light dark:text-ca-text-dark/70">
         <p>&copy; {{ date('Y') }} CraftAttack.xyz. Alle Rechte vorbehalten. Dies ist ein inoffizielles Fan-Projekt.</p>
         <p class="mt-1">
-            <a href="https://fternis.de" class="hover:text-ca-primary-700 dark:hover:text-ca-primary-300 transition-colors duration-200">Fabian Ternis</a> &amp;
-            <a href="https://michaelninder.de" class="hover:text-ca-primary-700 dark:hover:text-ca-primary-300 transition-colors duration-200">Michael Ninder</a>
+            <a href="https://fternis.de/imprint" class="hover:text-ca-primary-700 dark:hover:text-ca-primary-300 transition-colors duration-200">Impressum</a>
+            <span class="mx-2">|</span>
+            <a href="https://github.com/michaelninder/CraftAttack.xyz" class="hover:text-ca-primary-700 dark:hover:text-ca-primary-300 transition-colors duration-200">GitHub</a>
+            <span class="mx-2">|</span>
+            <a href="https://fternis.de" class="hover:text-ca-primary-700 dark:hover:text-ca-primary-300 transition-colors duration-200">Fabian Ternis</a>
         </p>
     </footer>
 </body>
