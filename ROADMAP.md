@@ -15,8 +15,8 @@ auf der Benutzer News und Twitch-Clips zu ihren favorisierten CraftAttack-Teilne
 ## Phase 0: Setup & Core-Fundament (Vorbereitung für MVP)
 
 *   [ ] **Projektinitialisierung:**
-    *   [ ] Laravel Projekt aufsetzen.
-    *   [ ] Tailwind CSS installieren und konfigurieren, **inklusive Dark Mode / Light Mode Umschaltung.**
+    *   [x] Laravel Projekt aufsetzen.
+    *   [x] Tailwind CSS installieren und konfigurieren, **inklusive Dark Mode / Light Mode Umschaltung.**
     *   [ ] Datenbankverbindung herstellen und erste Migrations ausführen.
 *   [ ] **Twitch OAuth Integration:**
     *   [ ] Laravel Socialite installieren.
