@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Member extends Model
+class Clip extends Model
 {
     use HasFactory;
 
@@ -15,12 +15,10 @@ class Member extends Model
 
     protected $fillable = [
         'user_id',
-        'name',
-        'pfp_path',
-        'is_new',
-        'twitch_username',
-        'youtube_url',
-        'twitch_url',
+        'twitch_clip_id',
+        'title',
+        'embed_url',
+        'thumbnail_url',
     ];
 
     protected static function boot()
@@ -34,5 +32,15 @@ class Member extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function likedByUsers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'clip_user_likes',
+            'clip_id',
+            'user_id',
+        )->withTimestamps();
     }
 }

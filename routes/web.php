@@ -1,7 +1,12 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\TwitchController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/auth/twitch', [TwitchController::class, 'redirectToTwitch'])
+    ->name('auth.twitch');
+Route::get('/auth/twitch/callback', [TwitchController::class, 'handleTwitchCallback']);
 
 Route::get('/', function () {
     return view('welcome');
