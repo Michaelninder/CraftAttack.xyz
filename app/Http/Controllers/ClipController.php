@@ -33,7 +33,6 @@ class ClipController extends Controller
             'twitch_clip_url' => 'required|url|regex:/twitch\.tv\/[a-zA-Z0-9_]+\/clip\/[a-zA-Z0-9_]+/|max:255',
         ]);
 
-        // Extract clip ID from URL
         preg_match(
             '/clip\/([a-zA-Z0-9_]+)/',
             $request->twitch_clip_url,
@@ -43,7 +42,13 @@ class ClipController extends Controller
 
         if (! $twitchClipId) {
             return back()->withErrors([
-                'twitch_clip_url' => 'Could not extract Twitch clip ID.',
+                'twitch_clip_url' => 'Twitch-Clip-ID konnte nicht extrahiert werden.',
+            ]);
+        }
+
+        if (Clip::where('twitch_clip_id', $twitchClipId)->exists()) {
+            return back()->withErrors([
+                'twitch_clip_url' => 'Dieser Clip wurde bereits geteilt.',
             ]);
         }
 
@@ -53,13 +58,13 @@ class ClipController extends Controller
                 $twitchClipId.
                 '&parent='.
                 request()->getHost(),
-            'thumbnail_url' => 'https://clips-media-assets2.twitch.tv/placeholder_thumbnail.jpg', // Replace with actual
+            'thumbnail_url' => 'https://clips-media-assets2.twitch.tv/placeholder_thumbnail.jpg',
         ];
 
         /*
         $response = Http::withHeaders([
             'Client-ID' => env('TWITCH_CLIENT_ID'),
-            'Authorization' => 'Bearer ' . env('TWITCH_APP_ACCESS_TOKEN'), // Or user token
+            'Authorization' => 'Bearer ' . env('TWITCH_APP_ACCESS_TOKEN'),
         ])->get("https://api.twitch.tv/helix/clips?id={$twitchClipId}");
 
         if ($response->successful() && !empty($response['data'])) {
@@ -70,7 +75,7 @@ class ClipController extends Controller
                 'thumbnail_url' => $data['thumbnail_url'],
             ];
         } else {
-             return back()->withErrors(['twitch_clip_url' => 'Failed to fetch clip details.']);
+             return back()->withErrors(['twitch_clip_url' => 'Details zum Clip konnten nicht abgerufen werden.']);
         }
         */
 
@@ -84,7 +89,7 @@ class ClipController extends Controller
 
         return redirect()
             ->route('clips.index')
-            ->with('success', 'Clip shared successfully!');
+            ->with('success', 'Clip erfolgreich geteilt!');
     }
 
     public function like(Clip $clip)

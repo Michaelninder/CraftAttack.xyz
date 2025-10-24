@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Auth\TwitchController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ClipController;
+use App\Http\Controllers\MemberController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/auth/twitch', [TwitchController::class, 'redirectToTwitch'])
@@ -53,12 +55,14 @@ Route::middleware(['auth'])->group(function () {
         'clips.unlike',
     );
 
-    Route::middleware('can:member')->group(function () {
-        Route::get('/clips/share', [ClipController::class, 'create'])->name(
-            'clips.create',
-        );
-        Route::post('/clips', [ClipController::class, 'store'])->name(
-            'clips.store',
-        );
-    });
+    Route::get('/clips/share', [ClipController::class, 'create'])->name(
+        'clips.create',
+    );
+    Route::post('/clips', [ClipController::class, 'store'])->name(
+        'clips.store',
+    );
 });
+
+
+
+Route::get('/new-clip', [ClipController::class, 'create'])->name('test.clips.create',);
