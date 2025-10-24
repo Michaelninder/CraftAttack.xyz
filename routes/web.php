@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\TwitchController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/auth/twitch', [TwitchController::class, 'redirectToTwitch'])
@@ -11,7 +11,6 @@ Route::get('/auth/twitch/callback', [TwitchController::class, 'handleTwitchCallb
 Route::get('/', function () {
     return view('welcome');
 });
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

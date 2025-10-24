@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Clip;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class ClipController extends Controller
 {
     public function index()
     {
         $clips = Clip::withCount('likedByUsers')->latest()->get();
+
         return view('clips.index', compact('clips'));
     }
 
@@ -40,21 +41,19 @@ class ClipController extends Controller
         );
         $twitchClipId = $matches[1] ?? null;
 
-        if (!$twitchClipId) {
+        if (! $twitchClipId) {
             return back()->withErrors([
                 'twitch_clip_url' => 'Could not extract Twitch clip ID.',
             ]);
         }
 
         $clipData = [
-            'title' => 'Twitch Clip ' . $twitchClipId,
-            'embed_url' =>
-                'https://clips.twitch.tv/embed?clip=' .
-                $twitchClipId .
-                '&parent=' .
+            'title' => 'Twitch Clip '.$twitchClipId,
+            'embed_url' => 'https://clips.twitch.tv/embed?clip='.
+                $twitchClipId.
+                '&parent='.
                 request()->getHost(),
-            'thumbnail_url' =>
-                'https://clips-media-assets2.twitch.tv/placeholder_thumbnail.jpg', // Replace with actual
+            'thumbnail_url' => 'https://clips-media-assets2.twitch.tv/placeholder_thumbnail.jpg', // Replace with actual
         ];
 
         /*
@@ -91,12 +90,14 @@ class ClipController extends Controller
     public function like(Clip $clip)
     {
         Auth::user()->likedClips()->syncWithoutDetaching([$clip->id]);
+
         return back()->with('success', 'Clip liked!');
     }
 
     public function unlike(Clip $clip)
     {
         Auth::user()->likedClips()->detach($clip->id);
+
         return back()->with('success', 'Clip unliked!');
     }
 }

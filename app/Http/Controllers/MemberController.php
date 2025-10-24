@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class MemberController extends Controller
 {
     public function index()
     {
         $members = Member::all();
+
         return view('members.index', compact('members'));
     }
 

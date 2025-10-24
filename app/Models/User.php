@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
@@ -14,6 +12,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     protected $fillable = [
@@ -72,5 +71,10 @@ class User extends Authenticatable
     public function isMember(): bool
     {
         return $this->role === 'member' || $this->isAdmin();
+    }
+
+    public function getAvatar(): string
+    {
+        return 'https://static-cdn.jtvnw.net/previews-ttv/live_user_'.strtolower($this->name).'-1920x1080.jpg';
     }
 }
