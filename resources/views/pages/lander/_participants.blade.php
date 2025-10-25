@@ -1,18 +1,25 @@
 <section class="py-16 bg-gray-100 dark:bg-gray-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white text-center mb-12">
-            Unsere Teilnehmer
+            Teilnehmer
         </h2>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
             @foreach ($participants as $participant)
                 <div class="flex flex-col items-center text-center">
-                    <div class="relative w-24 h-24 mb-4 rounded-full overflow-hidden border-4 border-indigo-500">
-                        <img
-                            src="{{ $participant->pfp_path ?? 'https://via.placeholder.com/150' }}"
-                            alt="{{ $participant->name }}"
-                            class="absolute inset-0 w-full h-full object-cover"
-                        >
+                    <div class="relative w-24 h-24 mb-4">
+                        <div class="rounded-full overflow-hidden border-4 border-indigo-500 w-full h-full">
+                            <img
+                                src="{{ $participant->getPfp() }}"
+                                alt="{{ $participant->name }}"
+                                class="absolute inset-0 w-full h-full object-cover rounded-xl"
+                            >
+                        </div>
+                        @if ($participant->is_new)
+                            <span class="absolute -top-2 -right-2 px-2 py-1 text-xs font-bold text-white bg-yellow-500 rounded-full dark:bg-yellow-400 z-10">
+                                Neu
+                            </span>
+                        @endif
                     </div>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-1">
                         {{ $participant->name }}
@@ -85,11 +92,6 @@
                             </a>
                         @endif
                     </div>
-                    @if ($participant->is_new)
-                        <span class="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                            Neu dabei
-                        </span>
-                    @endif
                 </div>
             @endforeach
         </div>
