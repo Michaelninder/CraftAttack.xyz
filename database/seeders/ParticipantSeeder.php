@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Participant;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str; // Add this line
 
 class ParticipantSeeder extends Seeder
 {
@@ -60,7 +61,7 @@ class ParticipantSeeder extends Seeder
                 'name' => 'Blizzor',
                 'is_new' => false,
                 'twitch_username' => 'blizzor',
-                'youtube_url' => 'https://www.youtube.com/c/Blizzor',
+                'youtube_url' => 'https://www.twitch.tv/blizzor',
                 'twitch_url' => 'https://www.twitch.tv/blizzor',
             ],
             [
@@ -563,6 +564,7 @@ class ParticipantSeeder extends Seeder
         ];
 
         foreach ($participants as $participant) {
+            $participant['id'] = Str::uuid();
             Participant::create($participant);
         }
     }
