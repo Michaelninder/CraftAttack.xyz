@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\TwitchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PageController;
@@ -64,7 +66,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth', 'can:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('participants', AdminParticipantController::class);
+    Route::resource('users', UserController::class);
 });
 
 

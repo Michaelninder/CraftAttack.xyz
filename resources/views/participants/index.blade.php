@@ -6,7 +6,7 @@
 
     @can('admin')
         <p class="mb-6">
-            <a href="{{ route('participants.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+            <a href="{{ route('admin.participants.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">
                 Neuen Teilnehmer hinzufügen
             </a>
         </p>
