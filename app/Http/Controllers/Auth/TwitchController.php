@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Participant;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -27,6 +28,12 @@ class TwitchController extends Controller
                     'twitch_token' => $twitchUser->token,
                 ],
             );
+
+            $participant = Participant::where('twitch_username', $twitchUser->nickname)->first();
+            if ($participant) {
+                $participant->user_id = $user->id;
+                $participant->save();
+            }
 
             Auth::login($user);
 

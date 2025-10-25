@@ -38,7 +38,8 @@
         </div>
     </div>
     <div class="absolute inset-y-0 right-0 w-full lg:w-1/2">
-        <img class="h-full w-full object-cover" src="https://images.unsplash.com/photo-1612287232252-f4722513f17d?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Twitch Livestream Background" loading="lazy">
+        {{--<img class="h-full w-full object-cover" src="https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/key-art/Minecraft_Fall_Drop_Campaign_Key_Art_DotNet_Downloadable_Wallpaper_414x414.png" alt="Twitch Livestream Background" loading="lazy">--}}
+        <img class="h-full w-full object-cover" src="https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/key-art/MC-Downloadables_Carousel_Pride-2022_800x450.jpg" alt="Twitch Livestream Background" loading="lazy">
         <div class="absolute inset-0 bg-gradient-to-r from-white dark:from-gray-800 to-transparent lg:from-white/70 lg:dark:from-gray-800/70"></div>
     </div>
 </div>
