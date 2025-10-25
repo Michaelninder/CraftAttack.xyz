@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ClipController;
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\Admin\ParticipantController as AdminParticipantController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/auth/twitch', [TwitchController::class, 'redirectToTwitch'])
@@ -60,6 +61,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/clips', [ClipController::class, 'store'])->name(
         'clips.store',
     );
+});
+
+Route::middleware(['auth', 'can:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('participants', AdminParticipantController::class);
 });
 
 

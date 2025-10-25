@@ -18,11 +18,6 @@
                     <x-nav-link :href="route('participants.index')" :active="request()->routeIs('participants.index')">
                         Mitglieder
                     </x-nav-link>
-                    @can('admin')
-                        <x-nav-link :href="route('participants.create')" :active="request()->routeIs('participants.create')">
-                            Mitglied hinzufügen
-                        </x-nav-link>
-                    @endcan
                 </div>
             </div>
 
@@ -99,11 +94,6 @@
             <x-responsive-nav-link :href="route('participants.index')" :active="request()->routeIs('participants.index')">
                 Mitglieder
             </x-responsive-nav-link>
-            @can('admin')
-                <x-responsive-nav-link :href="route('participants.create')" :active="request()->routeIs('participants.create')">
-                    Mitglied hinzufügen
-                </x-responsive-nav-link>
-            @endcan
         </div>
 
         @guest
