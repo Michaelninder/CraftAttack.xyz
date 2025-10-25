@@ -2,14 +2,30 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white text-center mb-4">Teilnehmer</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400 text-center mb-8">Wir können nur den Live-Status von Twitch-Streamern überprüfen</p>
-        <div class="flex justify-center space-x-4 mb-12">
+
+        <div class="mb-8 flex justify-center">
+            <input type="text" id="participant-search" onkeyup="filterAndSearchParticipants()" placeholder="Teilnehmer suchen..."
+                   class="px-4 py-2 w-full max-w-md border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+        </div>
+
+        <div class="flex flex-wrap justify-center space-x-2 sm:space-x-4 mb-12">
             <button onclick="filterParticipants('all')" class="filter-btn px-6 py-2 text-sm font-medium rounded-lg transition-colors duration-200 bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" data-filter="all">Alle</button>
             <button onclick="filterParticipants('live')" class="filter-btn px-6 py-2 text-sm font-medium rounded-lg transition-colors duration-200 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" data-filter="live">Live</button>
             <button onclick="filterParticipants('new')" class="filter-btn px-6 py-2 text-sm font-medium rounded-lg transition-colors duration-200 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" data-filter="new">Neu</button>
+            <button onclick="filterParticipants('youtube')" class="filter-btn px-6 py-2 text-sm font-medium rounded-lg transition-colors duration-200 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" data-filter="youtube">YouTube</button>
+            <button onclick="filterParticipants('twitch')" class="filter-btn px-6 py-2 text-sm font-medium rounded-lg transition-colors duration-200 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" data-filter="twitch">Twitch</button>
+            <!--button onclick="filterParticipants('instagram')" class="filter-btn px-6 py-2 text-sm font-medium rounded-lg transition-colors duration-200 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500" data-filter="instagram">Instagram</button-->
         </div>
+
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8" id="participants-grid">
             @foreach ($participants as $participant)
-                <div class="participant-card flex flex-col items-center text-center" data-is-live="{{ $participant->getLiveState() ? 'true' : 'false' }}" data-is-new="{{ $participant->is_new ? 'true' : 'false' }}">
+                <div class="participant-card flex flex-col items-center text-center"
+                     data-is-live="{{ $participant->getLiveState() ? 'true' : 'false' }}"
+                     data-is-new="{{ $participant->is_new ? 'true' : 'false' }}"
+                     data-has-youtube="{{ $participant->youtube_url ? 'true' : 'false' }}"
+                     data-has-twitch="{{ $participant->twitch_url ? 'true' : 'false' }}"
+                     data-has-instagram="{{ ($participant->instagram_url ?? false) ? 'true' : 'false' }}"
+                     data-name="{{ strtolower($participant->name) }}">
                     <div class="relative w-24 h-24 mb-4">
                         <div class="rounded-full overflow-hidden border-4 border-indigo-500 w-full h-full">
                             <img src="{{ $participant->getPfp() }}" alt="{{ $participant->name }}" class="absolute inset-0 w-full h-full object-cover rounded-xl">
@@ -47,26 +63,79 @@
     </div>
 </section>
 <script>
-    function filterParticipants(filter) {
+    let currentFilter = 'all';
+
+    function filterAndSearchParticipants() {
+        const searchValue = document.getElementById('participant-search').value.toLowerCase();
         const cards = document.querySelectorAll('.participant-card');
-        const buttons = document.querySelectorAll('.filter-btn');
-        buttons.forEach(btn => {
-            if (btn.dataset.filter === filter) {
-                btn.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200');
-                btn.classList.add('bg-indigo-600', 'text-white', 'hover:bg-indigo-700');
-            } else {
-                btn.classList.remove('bg-indigo-600', 'text-white', 'hover:bg-indigo-700');
-                btn.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200');
-            }
-        });
+
         cards.forEach(card => {
-            if (filter === 'all') {
+            const isLive = card.dataset.isLive === 'true';
+            const isNew = card.dataset.isNew === 'true';
+            const hasYoutube = card.dataset.hasYoutube === 'true';
+            const hasTwitch = card.dataset.hasTwitch === 'true';
+            const hasInstagram = card.dataset.hasInstagram === 'true';
+            const participantName = card.dataset.name;
+
+            let matchesFilter = false;
+            if (currentFilter === 'all') {
+                matchesFilter = true;
+            } else if (currentFilter === 'live') {
+                matchesFilter = isLive;
+            } else if (currentFilter === 'new') {
+                matchesFilter = isNew;
+            } else if (currentFilter === 'youtube') {
+                matchesFilter = hasYoutube;
+            } else if (currentFilter === 'twitch') {
+                matchesFilter = hasTwitch;
+            } else if (currentFilter === 'instagram') {
+                matchesFilter = hasInstagram;
+            }
+
+            const matchesSearch = participantName.includes(searchValue);
+
+            if (matchesFilter && matchesSearch) {
                 card.style.display = 'flex';
-            } else if (filter === 'live') {
-                card.style.display = card.dataset.isLive === 'true' ? 'flex' : 'none';
-            } else if (filter === 'new') {
-                card.style.display = card.dataset.isNew === 'true' ? 'flex' : 'none';
+            } else {
+                card.style.display = 'none';
             }
         });
     }
+
+    function filterParticipants(filter) {
+        currentFilter = filter;
+        const buttons = document.querySelectorAll('.filter-btn');
+
+        buttons.forEach(btn => {
+            if (btn.dataset.filter === filter) {
+                btn.classList.remove('bg-white', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200', 'hover:bg-gray-50', 'dark:hover:bg-gray-600');
+                btn.classList.add('bg-indigo-600', 'text-white', 'hover:bg-indigo-700');
+            } else {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'hover:bg-indigo-700');
+                btn.classList.add('bg-white', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-200', 'hover:bg-gray-50', 'dark:hover:bg-gray-600');
+            }
+            if (btn.dataset.filter === 'youtube' && filter !== 'youtube') {
+                btn.classList.add('text-red-500');
+                btn.classList.remove('focus:ring-indigo-500');
+                btn.classList.add('focus:ring-red-500');
+            } else if (btn.dataset.filter === 'twitch' && filter !== 'twitch') {
+                btn.classList.add('text-purple-600');
+                btn.classList.remove('focus:ring-indigo-500');
+                btn.classList.add('focus:ring-purple-500');
+            } else if (btn.dataset.filter === 'instagram' && filter !== 'instagram') {
+                btn.classList.add('text-pink-500');
+                btn.classList.remove('focus:ring-indigo-500');
+                btn.classList.add('focus:ring-pink-500');
+            } else if (['all', 'live', 'new'].includes(btn.dataset.filter) && filter !== btn.dataset.filter) {
+                btn.classList.add('focus:ring-indigo-500');
+                btn.classList.remove('focus:ring-red-500', 'focus:ring-purple-500', 'focus:ring-pink-500');
+            }
+        });
+
+        filterAndSearchParticipants();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        filterParticipants('all');
+    });
 </script>
