@@ -20,6 +20,9 @@
                                 Neu
                             </span>
                         @endif
+                        @if ($participant->getLiveState())
+                            <span class="absolute bottom-0 right-0 w-4 h-4 bg-red-500 rounded-full border-2 border-white dark:border-gray-800 animate-pulse"></span>
+                        @endif
                     </div>
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-1">
                         {{ $participant->name }}

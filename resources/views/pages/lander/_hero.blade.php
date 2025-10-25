@@ -80,7 +80,7 @@
             class="absolute inset-0 bg-gradient-to-r from-white to-transparent dark:from-gray-800 lg:from-white/70 lg:dark:from-gray-800/70"
         ></div>
         <p
-            class="absolute bottom-2 right-2 text-xs text-gray-500 dark:text-gray-300"
+            class="absolute bottom-2 right-2 text-xs text-gray-500"
         >
             Bild von minecraft.net
         </p>
