@@ -58,7 +58,7 @@ class Participant extends Model
         }
 
         $cacheKey = 'participant_live_state_' . $this->id;
-        $cacheDuration = now()->addMinutes(10);
+        $cacheDuration = now()->addMinutes(rand(9,19));
 
         return Cache::remember($cacheKey, $cacheDuration, function () {
             $clientId = config('services.twitch.client_id');
