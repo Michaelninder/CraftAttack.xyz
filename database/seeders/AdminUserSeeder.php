@@ -14,6 +14,7 @@ class AdminUserSeeder extends Seeder
         User::create([
             'id' => (string) Str::uuid(),
             'name' => 'michaelninder',
+            'email' => 'f.ternis@xpsystems.eu',
             'email_verified_at' => now(),
             'twitch_id' => '1057386477',
             'twitch_token' => null,

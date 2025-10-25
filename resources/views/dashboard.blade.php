@@ -9,7 +9,7 @@
         <a href="{{ route('clips.create') }}">Share a Twitch Clip</a>
     @endcan
 
-    <p><a href="{{ route('members.index') }}">View Craftattack Members</a></p>
+    <p><a href="{{ route('participants.index') }}">View Craftattack Members</a></p>
     <p><a href="{{ route('clips.index') }}">View Shared Clips</a></p>
 </div>
 @endsection

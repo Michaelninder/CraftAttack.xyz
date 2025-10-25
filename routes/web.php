@@ -2,17 +2,16 @@
 
 use App\Http\Controllers\Auth\TwitchController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ClipController;
-use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ParticipantController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/auth/twitch', [TwitchController::class, 'redirectToTwitch'])
     ->name('auth.twitch');
 Route::get('/auth/twitch/callback', [TwitchController::class, 'handleTwitchCallback']);
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PageController::class, 'lander'])->name('pages.lander');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -27,20 +26,20 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/members', [MemberController::class, 'index'])->name(
-        'members.index',
+    Route::get('/participants', [ParticipantController::class, 'index'])->name(
+        'participants.index',
     );
-    Route::get('/members/{member}', [MemberController::class, 'show'])->name(
-        'members.show',
+    Route::get('/participants/{participant}', [ParticipantController::class, 'show'])->name(
+        'participants.show',
     );
 
     Route::middleware('can:admin')->group(function () {
-        Route::get('/admin/members/create', [
-            MemberController::class,
+        Route::get('/admin/participants/create', [
+            ParticipantController::class,
             'create',
-        ])->name('members.create');
-        Route::post('/admin/members', [MemberController::class, 'store'])->name(
-            'members.store',
+        ])->name('participants.create');
+        Route::post('/admin/participants', [ParticipantController::class, 'store'])->name(
+            'participants.store',
         );
     });
 
