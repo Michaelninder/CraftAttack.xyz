@@ -14,6 +14,9 @@ class PageController extends Controller
             'clip_count' => Clip::count(),
             'participant_count' => Participant::count(),
         ];
-        return view('pages.lander', compact('stats'));
+
+        $participants = Participant::all()->sortBy('name');
+
+        return view('pages.lander', compact('stats', 'participants'));
     }
 }
