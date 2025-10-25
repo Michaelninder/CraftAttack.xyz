@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class Participant extends Model
 {
@@ -56,32 +57,37 @@ class Participant extends Model
             return false;
         }
 
-        $clientId = config('services.twitch.client_id');
-        $clientSecret = config('services.twitch.client_secret');
+        $cacheKey = 'participant_live_state_' . $this->id;
+        $cacheDuration = now()->addMinutes(10);
 
-        if (!$clientId || !$clientSecret) {
-            return false;
-        }
+        return Cache::remember($cacheKey, $cacheDuration, function () {
+            $clientId = config('services.twitch.client_id');
+            $clientSecret = config('services.twitch.client_secret');
 
-        $tokenResponse = Http::asForm()->post('https://id.twitch.tv/oauth2/token', [
-            'client_id' => $clientId,
-            'client_secret' => $clientSecret,
-            'grant_type' => 'client_credentials',
-        ]);
+            if (!$clientId || !$clientSecret) {
+                return false;
+            }
 
-        $accessToken = $tokenResponse->json('access_token');
+            $tokenResponse = Http::asForm()->post('https://id.twitch.tv/oauth2/token', [
+                'client_id' => $clientId,
+                'client_secret' => $clientSecret,
+                'grant_type' => 'client_credentials',
+            ]);
 
-        if (!$accessToken) {
-            return false;
-        }
+            $accessToken = $tokenResponse->json('access_token');
 
-        $streamResponse = Http::withHeaders([
-            'Client-ID' => $clientId,
-            'Authorization' => 'Bearer ' . $accessToken,
-        ])->get('https://api.twitch.tv/helix/streams', [
-            'user_login' => $this->twitch_username,
-        ]);
+            if (!$accessToken) {
+                return false;
+            }
 
-        return !empty($streamResponse->json('data'));
+            $streamResponse = Http::withHeaders([
+                'Client-ID' => $clientId,
+                'Authorization' => 'Bearer ' . $accessToken,
+            ])->get('https://api.twitch.tv/helix/streams', [
+                'user_login' => $this->twitch_username,
+            ]);
+
+            return !empty($streamResponse->json('data'));
+        });
     }
 }
