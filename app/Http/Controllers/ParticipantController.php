@@ -2,45 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
+use App\Models\Participant;
 use Illuminate\Http\Request;
 
-class MemberController extends Controller
+class ParticipantController extends Controller
 {
     public function index()
     {
-        $members = Member::all();
+        $participants = Participant::all();
 
-        return view('members.index', compact('members'));
+        return view('participants.index', compact('participants'));
     }
 
-    public function show(Member $member)
+    public function show(Participant $participant)
     {
         $isSubscribed = false;
         if (
             auth()->check() &&
             auth()->user()->twitch_token &&
-            $member->twitch_username
+            $participant->twitch_username
         ) {
             // $twitchService = new TwitchApiService(auth()->user()->twitch_token);
             // $isSubscribed = $twitchService->checkSubscription(
             //     auth()->user()->twitch_id,
-            //     $member->twitch_username
+            //     $participant->twitch_username
             // );
         }
 
-        return view('members.show', compact('member', 'isSubscribed'));
+        return view('participants.show', compact('participant', 'isSubscribed'));
     }
 
     public function create()
     {
-        return view('members.create');
+        return view('participants.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:members,name',
+            'name' => 'required|string|max:255|unique:participants,name',
             'user_id' => 'nullable|uuid|exists:users,id',
             'pfp_file' => 'nullable|image|max:2048', // 2MB max
             'is_new' => 'boolean',
@@ -53,10 +53,10 @@ class MemberController extends Controller
         if ($request->hasFile('pfp_file')) {
             $pfpPath = $request
                 ->file('pfp_file')
-                ->store('member_pfps', 'public');
+                ->store('participant_pfps', 'public');
         }
 
-        Member::create([
+        Participant::create([
             'user_id' => $request->user_id,
             'name' => $request->name,
             'pfp_path' => $pfpPath,
@@ -67,7 +67,7 @@ class MemberController extends Controller
         ]);
 
         return redirect()
-            ->route('members.index')
-            ->with('success', 'Member created successfully.');
+            ->route('participants.index')
+            ->with('success', 'Participant created successfully.');
     }
 }
